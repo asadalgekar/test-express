@@ -1,6 +1,5 @@
 import express from "express";
-import ejs from 'ejs';
-import path from 'path'; // Import path module to handle paths
+
 
 const app = express(); // Initialize Express app
 
