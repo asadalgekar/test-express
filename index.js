@@ -1,10 +1,9 @@
 import express from "express";
-import res from "express/lib/response";
 
 const app = express();
 const PORT = process.env.PORT || 5050;
 
-app.get("/home", () => {
+app.get("/home", (req, res) => {
     res.send("<h1>Deployment Succesfully.</h1>")
 })
 
