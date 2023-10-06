@@ -4,7 +4,7 @@ const app = express();
 const PORT = process.env.PORT || 5050;
 
 app.get("/home", (req, res) => {
-    res.render("index.ejs")
+    res.send("working fine")
 })
 
 app.listen(PORT, () => {
