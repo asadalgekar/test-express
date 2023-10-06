@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "deploy express app on vercel",
     "main": "index.js",
+    "type": "module",
 
 
     "engines": {
