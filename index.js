@@ -7,13 +7,12 @@ const app = express(); // Initialize Express app
 // Set the view engine to EJS
 app.set('view engine', 'ejs');
 
-// Set the views directory
-app.set('views', path.join(__dirname, 'views'));
+
 
 const PORT = process.env.PORT || 5050;
 
 app.get("/home", (req, res) => {
-    res.render("index.ejs");
+    res.render("index");
 });
 
 app.listen(PORT, () => {
