@@ -47,9 +47,9 @@ app.get("/home", (req, res) => {
 app.post("/distance", (req, res) => {
     const name = req.body.name;
     req.session.name = name;
-    console.log(req.session.name);
     const cacheName = req.session.name;
-    res.render('index', { cacheName, views: req.session.views });
+    const send = "Hello, " + cacheName
+    res.render('index', { send, views: req.session.views });
 });
 
 
