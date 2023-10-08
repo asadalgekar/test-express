@@ -10,6 +10,16 @@
 
 <body>
     <h1>EJS working fine and deployed</h1>
+    <h1>
+        <%= views %>
+    </h1>
+
+    <form action="/distance" method="POST">
+        <label for="name">Name</label><br>
+        <input type="text" name="name" value=""><br>
+        <input type="submit" value="Submit">
+
+    </form>
 </body>
 
 </html>
