@@ -9,17 +9,23 @@
 </head>
 
 <body>
-    <h1>EJS working fine and deployed</h1>
-    <h1>
-        <%= views %>
-    </h1>
+    <% if(locals.cacheName){ %>
+        <h1>Name:
+            <%= cacheName %>
+        </h1>
+        <% } else { %>
+            <h1>No name yet, first submit form</h1>
+            <h1>Views:
+                <%= views %>
+            </h1>
+            <% } %>
 
-    <form action="/distance" method="POST">
-        <label for="name">Name</label><br>
-        <input type="text" name="name" value=""><br>
-        <input type="submit" value="Submit">
+                <form action="/distance" method="POST">
+                    <label for="name">Name</label><br>
+                    <input type="text" name="name" value=""><br>
+                    <input type="submit" value="Submit">
 
-    </form>
+                </form>
 </body>
 
 </html>

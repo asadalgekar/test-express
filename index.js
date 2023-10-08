@@ -26,24 +26,30 @@ const PORT = process.env.PORT || 5050;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-    secret: '124',
-    resave: false,
-    saveUninitialized: true,
+    secret: 'my-secret', // a secret string used to sign the session ID cookie
+    resave: false, // don't save session if unmodified
+    saveUninitialized: false // don't create session until something stored
 }));
 
 app.get("/home", (req, res) => {
     if (req.session.views) {
         req.session.views++;
     } else {
-        req.session.views = 1; // Initialize views to 0
+        req.session.views = 1; // Initialize views to 1
     }
+
+
 
     res.render("index", { views: req.session.views });
 });
 
+
 app.post("/distance", (req, res) => {
     const name = req.body.name;
-    res.send(`<h1>${name}</h1>`);
+    req.session.name = name;
+    console.log(req.session.name);
+    const cacheName = req.session.name;
+    res.render('index', { cacheName, views: req.session.views });
 });
 
 
