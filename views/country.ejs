@@ -1,23 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <!-- Your head content here -->
 </head>
 
 <body>
-    <% if (locals.citiesCached) {%>
-        <% citiesCached.forEach((city) => { %>
+    <% if (locals.dataTwo) { %>
+        <% dataTwo.forEach((city) => { %>
             <h2>
-                <%= city.name%>
+                <%= city.name %>
             </h2>
             <% }) %>
-                <% }else {  %>
-                    <h2>No cached data yet </h2>
+                <% } else { %>
+                    <h2>No cached data yet</h2>
                     <% } %>
+
+                        <% if (locals.renderSessionData) { %>
+                            <h1>Data coming from session storage</h1>
+                            <% renderSessionData.forEach((city) => { %>
+                                <h2>
+                                    <%= city.name %>
+                                </h2>
+                                <% }) %>
+                                    <% } else { %>
+                                        <h1>No cities cached data yet</h1>
+                                        <form action="/distance" method="GET">
+                                            <h2>Try for session data</h2>
+                                            <button type="submit">Hit</button>
+                                        </form>
+                                        <% } %>
 </body>
 
 </html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <% if(locals.send){ %>
+        <h1>
+            <%= send %>
+        </h1>
+        <% } else { %>
+            <h1>No name yet, first submit form</h1>
+            <h1>Views:
+                <%= views %>
+            </h1>
+            <% } %>
+
+                <form action="/distance" method="POST">
+                    <label for="name">Name</label><br>
+                    <input type="text" name="name" value=""><br>
+                    <input type="submit" value="Submit">
+
+                </form>
+                <% if (locals.citiesCached) {%>
+                    <% citiesCached.forEach((city) => { %>
+                        <h2>
+                            <%= city.name%>
+                        </h2>
+                        <% }) %>
+                            <% }else {  %>
+                                <h2>No cached data yet </h2>
+                                <% } %>
+
+</body>
+
+</html>

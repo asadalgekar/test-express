@@ -1,19 +1,31 @@
-// Import the required modules
-import express from "express"; // Import Express.js
-import path from 'path'; // Import the path module to handle file paths
-import { fileURLToPath } from 'url'; // Import the fileURLToPath function from the url module
-import session from "express-session";
+import express from "express";
 import axios from "axios";
+import schedule from "node-schedule";
+import session from "express-session";
+import path from "path";
+import { fileURLToPath } from "url";
+import { config } from 'dotenv';
 
+config();
+console.log("api", process.env.API_KEY)
+
+const app = express();
+const port = process.env.PORT || 3000;
+let secretKey = '1234'
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
+
+app.use(session({
+    secret: 'my-secret', // a secret string used to sign the session ID cookie
+    resave: false, // don't save session if unmodified
+    saveUninitialized: false // don't create session until something stored
+}));
 // Get the current filename (this file's URL)
 const __filename = fileURLToPath(
-    import.meta.url);
+    import.meta.url)
 
 // Get the directory name (the folder containing this file)
 const __dirname = path.dirname(__filename);
-
-// Create an Express application
-const app = express();
 
 // Set the view engine to EJS (a template engine for rendering HTML)
 app.set('view engine', 'ejs');
@@ -21,31 +33,54 @@ app.set('view engine', 'ejs');
 // Set the directory for views (HTML templates) to the 'views' folder in the current directory
 // Points to a folder named "views" in the same directory as your Node.js script.
 app.set('views', path.join(__dirname, 'views'));
+app.set('public', __dirname + '/public');
 
-const PORT = process.env.PORT || 5050;
+app.get("/", async(req, res) => {
 
 
-app.use(express.urlencoded({ extended: true }));
-app.use(session({
-    secret: 'my-secret', // a secret string used to sign the session ID cookie
-    resave: false, // don't save session if unmodified
-    saveUninitialized: false // don't create session until something stored
-}));
-
-app.get("/home", async(req, res) => {
-    if (req.session.views) {
-        req.session.views++;
-    } else {
-        req.session.views = 1; // Initialize views to 1
-    }
-
-    // axios
-    let code = "AF"
-    const headers = {
-        'X-RapidAPI-Key': '0da6700346msh27f8c33ac7f438cp1c33cajsn6337f1937014',
-        'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
-    };
     try {
+        const response = await axios.get('https://wft-geo-db.p.rapidapi.com/v1/geo/countries?limit=10', {
+            headers: {
+                'X-RapidAPI-Key': process.env.API_KEY,
+                'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
+            }
+        })
+        const countries = response.data.data;
+        res.render("index", { data: countries });
+
+    } catch (error) {
+        console.error('Error fetching countries:', error);
+        res.status(500).json({ error: 'Failed to fetch countries' });
+    }
+});
+
+// distance route
+app.get("/distance", (req, res) => {
+    // Retrieve data from session or perform any other data retrieval logic
+    const renderSessionData = req.session.citySessionData; // Replace 'data' with the actual session key
+
+
+    res.render("country", { renderSessionData });
+
+});
+
+// country details route
+app.get("/:country", async(req, res) => {
+    try {
+        const countryName = req.params.country;
+        const splitCountryName = countryName.split("-");
+        const name = splitCountryName[0];
+        const code = splitCountryName[1];
+
+        if (!code) {
+            return res.status(400).json({ error: 'Invalid country code' });
+        }
+
+        const headers = {
+            'X-RapidAPI-Key': process.env.API_KEY,
+            'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
+        };
+
         const requestOne = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${code}`, { headers });
         const responseOne = await requestOne;
         const dataOne = responseOne.data.data;
@@ -56,31 +91,19 @@ app.get("/home", async(req, res) => {
         const responseTwo = await requestTwo;
         const dataTwo = responseTwo.data.data;
 
-        req.session.country = dataOne;
-        req.session.city = dataTwo;
+        req.session.citySessionData = dataTwo;
 
+        res.render('country', { dataOne, dataTwo })
     } catch (error) {
-        console.error('Error fetching data:', error);
+        res.send(error)
+
     }
 
-
-
-    res.render("index", { views: req.session.views });
-});
-
-
-app.post("/distance", (req, res) => {
-    const countryCached = req.session.country;
-    const citiesCached = req.session.city;
-    const name = req.body.name;
-    req.session.name = name;
-    const cacheName = req.session.name;
-    const send = "Hello, " + cacheName
-    res.render('index', { countryCached, citiesCached, send, views: req.session.views });
-});
+})
 
 
 
-app.listen(PORT, () => {
-    console.log(`server running on ${PORT}`);
+
+app.listen(port, () => {
+    console.log(`Server running on ${port}`);
 });

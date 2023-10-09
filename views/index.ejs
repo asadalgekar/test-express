@@ -1,41 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include('partials/header.ejs') %>
+    <main>
+        <div class="search-section">
+            <div class="country-wrapper">
+                <div class="display-country">
+                    <div class="search-logo">
+                        <img src="/images/search.svg" alt="Search Icon">
+                    </div>
+                    <div class="search-title">
+                        SELECT COUNTRY NAME
+                    </div>
+                    <div class="dropdown-logo">
+                        <img src="/images/dropdown.svg" alt="Search Icon">
+                    </div>
+                </div>
+                <div class="search-country">
+                    <div class="dropdown-content">
+                        <div class="search-bar"> <input type="text" placeholder=" " class="search-input"></div>
+                        <div class="display-data">
+                            <% if (locals.data) { %>
+                                <% data.forEach(country => { %>
+                                    <div class="country">
+                                        <a href="/<%= country.name%>-<%= country.code %>" class="country-link">
+                                            <%= country.name %>
+                                        </a>
+                                    </div>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+                                    <% }); %>
+                                        <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="about-section container">
+            <div class="webapp-info">
+                <p>UrbanDiscoverify is your comprehensive guide for exploring country details, discovering cities, and finding nearby cities. As international master's students, we often found ourselves searching Google for information about nearby cities
+                    when planning vacations, internships, or full-time travel. With UrbanDiscoverify, you can easily access essential and helpful information about cities, nearby cities, and distances, making your stay and travel planning a breeze.
+                </p>
+            </div>
 
-<body>
-    <% if(locals.send){ %>
-        <h1>
-            <%= send %>
-        </h1>
-        <% } else { %>
-            <h1>No name yet, first submit form</h1>
-            <h1>Views:
-                <%= views %>
-            </h1>
-            <% } %>
+        </div>
+        <div class="table-container container">
+            <table class="styled-table">
+                <tr>
+                    <th>COUNTRY</th>
+                    <th>COUNTRY CODE</th>
+                    <th>CURRENCY</th>
+                </tr>
 
-                <form action="/distance" method="POST">
-                    <label for="name">Name</label><br>
-                    <input type="text" name="name" value=""><br>
-                    <input type="submit" value="Submit">
-
-                </form>
-                <% if (locals.citiesCached) {%>
-                    <% citiesCached.forEach((city) => { %>
-                        <h2>
-                            <%= city.name%>
-                        </h2>
-                        <% }) %>
-                            <% }else {  %>
-                                <h2>No cached data yet </h2>
+                <% if (locals.data) { %>
+                    <% data.forEach(details => { %>
+                        <tr>
+                            <td>
+                                <%= details.name %>
+                            </td>
+                            <td>
+                                <%= details.code %>
+                            </td>
+                            <td>
+                                <%= details.currencyCodes %>
+                            </td>
+                            <% }); %>
                                 <% } %>
+                        </tr>
+            </table>
+        </div>
+    </main>
 
-</body>
 
-</html>
+    <%- include("partials/footer.ejs") %>
