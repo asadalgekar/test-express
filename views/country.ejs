@@ -6,6 +6,51 @@
 </head>
 
 <body>
+    <div class="cities-list">
+        <h1>
+            <% if (locals.dataOne) { %>
+                <%= dataOne.name %> Cities
+                    <% } else if (locals.countryData) { %>
+                        <%= countryData.name %> Cities
+                            <% } %>
+        </h1>
+        <div class="city-names">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>City Name</th>
+                        <th>Population</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (locals.dataTwo) { %>
+                        <% dataTwo.forEach(data => { %>
+                            <tr>
+                                <td>
+                                    <%= data.city %>
+                                </td>
+                                <td>
+                                    <%= data.population %>
+                                </td>
+                            </tr>
+                            <% }); %>
+                                <% } else if (locals.cityData) { %>
+                                    <% cityData.forEach(data => { %>
+                                        <tr>
+                                            <td>
+                                                <%= data.city %>
+                                            </td>
+                                            <td>
+                                                <%= data.population %>
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+                                            <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
     <% if (locals.dataTwo) { %>
         <% dataTwo.forEach((city) => { %>
             <h2>
