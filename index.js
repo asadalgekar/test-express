@@ -62,7 +62,7 @@ app.post("/distance", (req, res) => {
     const distance = 9;
 
 
-    res.render("country", { distance, renderCitySessionData, renderCountrySessionData });
+    res.render("country", { renderCitySessionData, renderCountrySessionData });
 
 });
 
@@ -103,8 +103,6 @@ app.get("/:country", async(req, res) => {
     }
 
 })
-
-
 
 
 app.listen(port, () => {
