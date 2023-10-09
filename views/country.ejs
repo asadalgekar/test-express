@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <!-- Your head content here -->
-</head>
-
-<body>
+<%- include("partials/header.ejs")%>
     <div class="cities-list">
         <h1>
             <% if (locals.dataOne) { %>
                 <%= dataOne.name %> Cities
-                    <% } else if (locals.countryData) { %>
-                        <%= countryData.name %> Cities
+                    <% } else if (locals.renderCountrySessionData) { %>
+                        <%= renderCountrySessionData.name %> Cities
                             <% } %>
         </h1>
         <div class="city-names">
@@ -34,8 +27,8 @@
                                 </td>
                             </tr>
                             <% }); %>
-                                <% } else if (locals.cityData) { %>
-                                    <% cityData.forEach(data => { %>
+                                <% } else if (locals.renderCitySessionData) { %>
+                                    <% renderCitySessionData.forEach(data => { %>
                                         <tr>
                                             <td>
                                                 <%= data.city %>
@@ -50,31 +43,23 @@
             </table>
         </div>
     </div>
-    </div>
-    <% if (locals.dataTwo) { %>
-        <% dataTwo.forEach((city) => { %>
+
+
+
+    <% if (locals.renderCitySessionData) { %>
+        <h1>Data coming from session storage</h1>
+        <% renderCitySessionData.forEach((city) => { %>
             <h2>
                 <%= city.name %>
             </h2>
             <% }) %>
                 <% } else { %>
-                    <h2>No cached data yet</h2>
+                    <h1>No cities cached data yet</h1>
+                    <form action="/distance" method="GET">
+                        <h2>Try for session data</h2>
+                        <button type="submit">Hit</button>
+                    </form>
                     <% } %>
+                        </body>
 
-                        <% if (locals.renderSessionData) { %>
-                            <h1>Data coming from session storage</h1>
-                            <% renderSessionData.forEach((city) => { %>
-                                <h2>
-                                    <%= city.name %>
-                                </h2>
-                                <% }) %>
-                                    <% } else { %>
-                                        <h1>No cities cached data yet</h1>
-                                        <form action="/distance" method="GET">
-                                            <h2>Try for session data</h2>
-                                            <button type="submit">Hit</button>
-                                        </form>
-                                        <% } %>
-</body>
-
-</html>
+                        </html>

@@ -57,10 +57,11 @@ app.get("/", async(req, res) => {
 // distance route
 app.get("/distance", (req, res) => {
     // Retrieve data from session or perform any other data retrieval logic
-    const renderSessionData = req.session.citySessionData; // Replace 'data' with the actual session key
+    const renderCitySessionData = req.session.citySessionData;
+    const renderCountrySessionData = req.session.countrySessionData;
 
 
-    res.render("country", { renderSessionData });
+    res.render("country", { renderCitySessionData, renderCountrySessionData });
 
 });
 
@@ -92,6 +93,7 @@ app.get("/:country", async(req, res) => {
         const dataTwo = responseTwo.data.data;
 
         req.session.citySessionData = dataTwo;
+        req.session.countrySessionData = dataOne;
 
         res.render('country', { dataOne, dataTwo })
     } catch (error) {
