@@ -30,19 +30,21 @@
                                 </td>
                             </tr>
                             <% }); %>
-                                <% } %>
-                                    <% if (locals.renderCitySessionData) { %>
-                                        <% renderCitySessionData.forEach(data => { %>
-                                            <tr>
-                                                <td>
-                                                    <%= data.city %>
-                                                </td>
-                                                <td>
-                                                    <%= data.population %>
-                                                </td>
-                                            </tr>
-                                            <% }); %>
+                                <% } else if (locals.renderCitySessionData) { %>
+                                    <% renderCitySessionData.forEach(data => { %>
+                                        <tr>
+                                            <td>
+                                                <%= data.city %>
+                                            </td>
+                                            <td>
+                                                <%= data.population %>
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+                                            <% } else { %>
+                                                <h1>cities data not rendered</h1>
                                                 <% } %>
+
                 </tbody>
             </table>
         </div>
