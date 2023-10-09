@@ -3,9 +3,12 @@
         <h1>
             <% if (locals.dataOne) { %>
                 <%= dataOne.name %> Cities
-                    <% } else if (locals.renderCountrySessionData) { %>
+                    <% } if (locals.renderCountrySessionData) { %>
                         <%= renderCountrySessionData.name %> Cities
-                            <% } %>
+                            <% }else { %>
+
+                                <h1>Data caching not happening</h1>
+                                <% } %>
         </h1>
         <div class="city-names">
             <table class="styled-table">
@@ -27,21 +30,23 @@
                                 </td>
                             </tr>
                             <% }); %>
-                                <% } else if (locals.renderCitySessionData) { %>
-                                    <% renderCitySessionData.forEach(data => { %>
-                                        <tr>
-                                            <td>
-                                                <%= data.city %>
-                                            </td>
-                                            <td>
-                                                <%= data.population %>
-                                            </td>
-                                        </tr>
-                                        <% }); %>
-                                            <% } %>
+                                <% } %>
+                                    <% if (locals.renderCitySessionData) { %>
+                                        <% renderCitySessionData.forEach(data => { %>
+                                            <tr>
+                                                <td>
+                                                    <%= data.city %>
+                                                </td>
+                                                <td>
+                                                    <%= data.population %>
+                                                </td>
+                                            </tr>
+                                            <% }); %>
+                                                <% } %>
                 </tbody>
             </table>
         </div>
+
     </div>
 
 
