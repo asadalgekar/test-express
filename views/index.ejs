@@ -26,6 +26,16 @@
                     <input type="submit" value="Submit">
 
                 </form>
+                <% if (locals.citiesCached) {%>
+                    <% citiesCached.forEach((city) => { %>
+                        <h2>
+                            <%= city.name%>
+                        </h2>
+                        <% }) %>
+                            <% }else {  %>
+                                <h2>No cached data yet </h2>
+                                <% } %>
+
 </body>
 
 </html>

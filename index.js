@@ -3,6 +3,7 @@ import express from "express"; // Import Express.js
 import path from 'path'; // Import the path module to handle file paths
 import { fileURLToPath } from 'url'; // Import the fileURLToPath function from the url module
 import session from "express-session";
+import axios from "axios";
 
 // Get the current filename (this file's URL)
 const __filename = fileURLToPath(
@@ -31,11 +32,35 @@ app.use(session({
     saveUninitialized: false // don't create session until something stored
 }));
 
-app.get("/home", (req, res) => {
+app.get("/home", async(req, res) => {
     if (req.session.views) {
         req.session.views++;
     } else {
         req.session.views = 1; // Initialize views to 1
+    }
+
+    // axios
+    let code = "AF"
+    const headers = {
+        'X-RapidAPI-Key': '0da6700346msh27f8c33ac7f438cp1c33cajsn6337f1937014',
+        'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
+    };
+    try {
+        const requestOne = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${code}`, { headers });
+        const responseOne = await requestOne;
+        const dataOne = responseOne.data.data;
+
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        const requestTwo = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?countryIds=${code}`, { headers });
+        const responseTwo = await requestTwo;
+        const dataTwo = responseTwo.data.data;
+
+        req.session.country = dataOne;
+        req.session.city = dataTwo;
+
+    } catch (error) {
+        console.error('Error fetching data:', error);
     }
 
 
@@ -45,11 +70,13 @@ app.get("/home", (req, res) => {
 
 
 app.post("/distance", (req, res) => {
+    const countryCached = req.session.country;
+    const citiesCached = req.session.city;
     const name = req.body.name;
     req.session.name = name;
     const cacheName = req.session.name;
     const send = "Hello, " + cacheName
-    res.render('index', { send, views: req.session.views });
+    res.render('index', { countryCached, citiesCached, send, views: req.session.views });
 });
 
 
