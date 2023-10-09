@@ -55,13 +55,14 @@ app.get("/", async(req, res) => {
 });
 
 // distance route
-app.get("/distance", (req, res) => {
+app.post("/distance", (req, res) => {
     // Retrieve data from session or perform any other data retrieval logic
     const renderCitySessionData = req.session.citySessionData;
     const renderCountrySessionData = req.session.countrySessionData;
+    const distance = 9;
 
 
-    res.render("country", { renderCitySessionData, renderCountrySessionData });
+    res.render("country", { distance, renderCitySessionData, renderCountrySessionData });
 
 });
 
