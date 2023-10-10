@@ -62,16 +62,19 @@ app.get("/", async(req, res) => {
 });
 
 // distance route
-app.post("/distance", (req, res) => {
-    // Retrieve data from session or perform any other data retrieval logic
-    const renderCitySessionData = req.session.citySessionData;
-    const renderCountrySessionData = req.session.countrySessionData;
-    const distance = 9;
-
-
-    res.render("country", { renderCitySessionData, renderCountrySessionData });
-
+app.post('/distance', (req, res) => {
+    // Check if renderCitySessionData is available in the session
+    if (req.session.citySessionData && req.session.countrySessionData) {
+        const renderCitySessionData = req.session.citySessionData;
+        const renderCountrySessionData = req.session.countrySessionData;
+        // Use renderCitySessionData for further processing or rendering
+        res.render('country', { renderCitySessionData, renderCountrySessionData });
+    } else {
+        // If not available, send an error response
+        res.status(400).json({ error: 'renderCitySessionData not found in session' });
+    }
 });
+
 
 // country details route
 app.get("/:country", async(req, res) => {
