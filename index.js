@@ -105,6 +105,7 @@ app.get("/:country", async(req, res) => {
 
         req.session.citySessionData = dataTwo;
         req.session.countrySessionData = dataOne;
+        console.log("city cache session:", req.session.citySessionData)
 
         res.render('country', { dataOne, dataTwo })
     } catch (error) {
