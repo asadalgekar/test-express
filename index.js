@@ -39,6 +39,13 @@ app.get("/", async(req, res) => {
 
 
     try {
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Error destroying session:', err);
+            }
+            // Redirect or send a response as needed
+            console.log("Session cleared")
+        });
         const response = await axios.get('https://wft-geo-db.p.rapidapi.com/v1/geo/countries?limit=10', {
             headers: {
                 'X-RapidAPI-Key': process.env.API_KEY,
