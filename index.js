@@ -142,7 +142,7 @@ app.get("/:country", async(req, res) => {
         const requestTwo = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?countryIds=${code}`, { headers });
         const responseTwo = await requestTwo;
         const dataTwo = responseTwo.data.data;
-
+        cache.del(key);
         const dataToCache = {
             countrySessionData: dataOne,
             citySessionData: dataTwo
@@ -150,7 +150,7 @@ app.get("/:country", async(req, res) => {
 
 
 
-        cache.set(key, dataToCache, 33600);
+        cache.set(key, dataToCache, 34600);
 
         res.render('country', { dataOne, dataTwo });
     } catch (error) {
