@@ -5,7 +5,8 @@ import session from "express-session";
 import path from "path";
 import { fileURLToPath } from "url";
 import { config } from 'dotenv';
-
+import NodeCache from "node-cache";
+const cache = new NodeCache();
 config();
 const app = express();
 const port = process.env.PORT || 3000;
@@ -62,19 +63,52 @@ app.get("/", async(req, res) => {
 });
 
 // distance route
-app.post('/distance', (req, res) => {
+const key = '111'; // Define a cache key for your data
+app.post('/distance/:name-:code', async(req, res) => {
 
-    // Check if renderCitySessionData is available in the session
-    if (req.session.citySessionData && req.session.countrySessionData) {
-        const renderCitySessionData = req.session.citySessionData;
-        const renderCountrySessionData = req.session.countrySessionData;
-        // Use renderCitySessionData for further processing or rendering
-        res.render('country', { renderCitySessionData, renderCountrySessionData });
+    const code = req.params;
+
+    // Check if the data is in the cache
+    const cachedData = cache.get(key);
+    console.log(cachedData)
+
+    if (cachedData) {
+        // Data is cached, you can use it
+        res.json({ message: 'Data is cached', data: cachedData });
     } else {
-        // If not available, send an error response
-        res.status(400).json({ error: 'renderCitySessionData not found in session' });
+        // Data is not in the cache, you can handle this case
+        res.json({ message: 'Data is not cached' });
     }
+
+    //     try {
+    // const headers = {
+    //     'X-RapidAPI-Key': process.env.API_KEY,
+    //     'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
+    // };
+    //         const response = await axios.get(`
+    //https: //wft-geo-db.p.rapidapi.com/v1/geo/cities?countryIds=${code}`, { headers });
+    //         const cachedMissedCityData = response.data.data;
+
+    //         // Store the fetched data in the cache with a defined expiration time (e.g., 3600 seconds)
+    //         cache.set(key, cachedMissedCityData, 3600);
+
+    //         const renderCitySessionData = req.session.citySessionData;
+    //         const renderCountrySessionData = req.session.countrySessionData;
+
+    //         res.render('country', { renderCitySessionData, renderCountrySessionData, cachedMissedCityData });
+    //     } catch (error) {
+    //         console.error('Error fetching data:', error);
+    //         res.status(500).json({ error: 'An error occurred while fetching data' });
+    //     }
+    // }
 });
+
+
+
+
+
+
+
 app.get('/favicon.ico', (req, res) => {
     // Return a 204 No Content response to handle it silently
     console.log("favicon route hit")
@@ -83,10 +117,9 @@ app.get('/favicon.ico', (req, res) => {
 
 // country details route
 app.get("/:country", async(req, res) => {
-    console.log("country route hit")
+    console.log("country route hit");
 
     try {
-
         const countryName = req.params.country;
         const splitCountryName = countryName.split("-");
         const name = splitCountryName[0];
@@ -111,17 +144,20 @@ app.get("/:country", async(req, res) => {
         const responseTwo = await requestTwo;
         const dataTwo = responseTwo.data.data;
 
-        req.session.citySessionData = dataTwo;
-        req.session.countrySessionData = dataOne;
-        console.log("city cache session:", req.session.citySessionData)
+        const dataToCache = {
+            citySessionData: dataTwo,
+            countrySessionData: dataOne,
+        };
 
-        res.render('country', { dataOne, dataTwo })
+
+        cache.set(key, dataToCache, 3600);
+
+        res.render('country', { name: name, code: code, dataOne, dataTwo });
     } catch (error) {
-        res.send(error)
-
+        res.send(error);
     }
+});
 
-})
 
 
 app.listen(port, () => {

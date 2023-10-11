@@ -5,7 +5,9 @@
                 <%= dataOne.name %> Cities
                     <% } else if (locals.renderCountrySessionData) { %>
                         <%= renderCountrySessionData.name %> Cities
-                            <% } %>
+                            <% } else if (locals.cachedMissedCountryData) { %>
+                                <%= cachedMissedCountryData.name %> Cities
+                                    <% } %>
         </h1>
         <div class="city-names">
             <table class="styled-table">
@@ -38,7 +40,18 @@
                                             </td>
                                         </tr>
                                         <% }); %>
-                                            <% } %>
+                                            <% } else if (locals.cachedMissedCityData) { %>
+                                                <% cachedMissedCityData.forEach(data => { %>
+                                                    <tr>
+                                                        <td> from cached miss
+                                                            <%= data.city %>
+                                                        </td>
+                                                        <td>
+                                                            <%= data.population %>
+                                                        </td>
+                                                    </tr>
+                                                    <% }); %>
+                                                        <% } %>
                 </tbody>
             </table>
         </div>
@@ -46,20 +59,14 @@
 
 
 
-    <% if (locals.renderCitySessionData) { %>
-        <h1>Data coming from session storage</h1>
-        <% renderCitySessionData.forEach((city) => { %>
-            <h2>
-                <%= city.name %>
-            </h2>
-            <% }) %>
-                <% } else { %>
-                    <h1>No cities cached data yet</h1>
-                    <form action="/distance" method="POST">
-                        <h2>Try for session data</h2>
-                        <button type="submit">Hit</button>
-                    </form>
-                    <% } %>
-                        </body>
 
-                        </html>
+
+    <h1>No cities cached data yet</h1>
+    <form action="/distance/<%= name%>-<%= code %>" method="POST">
+        <h2>Try for session data</h2>
+        <button type="submit">Hit</button>
+    </form>
+
+    </body>
+
+    </html>
