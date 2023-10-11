@@ -7,8 +7,6 @@ import { fileURLToPath } from "url";
 import { config } from 'dotenv';
 
 config();
-console.log("api", process.env.API_KEY)
-
 const app = express();
 const port = process.env.PORT || 3000;
 let secretKey = '1234'
@@ -16,10 +14,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 app.use(session({
-    secret: 'my-secret', // a secret string used to sign the session ID cookie
+    secret: '1222', // a secret string used to sign the session ID cookie
     resave: false, // don't save session if unmodified
     saveUninitialized: false // don't create session until something stored
 }));
+
 // Get the current filename (this file's URL)
 const __filename = fileURLToPath(
     import.meta.url)
@@ -35,9 +34,9 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.set('public', __dirname + '/public');
 
+
+// Home Route
 app.get("/", async(req, res) => {
-
-
     try {
         req.session.destroy((err) => {
             if (err) {
@@ -78,6 +77,7 @@ app.post('/distance', (req, res) => {
 
 // country details route
 app.get("/:country", async(req, res) => {
+    console.log("country route hit")
     try {
         const countryName = req.params.country;
         const splitCountryName = countryName.split("-");
