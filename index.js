@@ -84,19 +84,9 @@ app.get('/favicon.ico', (req, res) => {
 // country details route
 app.get("/:country", async(req, res) => {
     console.log("country route hit")
-    try {
-        req.session.destroy((err) => {
-            if (err) {
-                console.error('Error destroying session:', err);
-            }
-            // Redirect or send a response as needed
-            console.log("Session cleared");
-        });
-    } catch (error) {
-        console.log("cache clear error: ", error)
-    }
 
     try {
+
         const countryName = req.params.country;
         const splitCountryName = countryName.split("-");
         const name = splitCountryName[0];
