@@ -67,7 +67,7 @@ app.get("/", async(req, res) => {
 const key = '111';
 app.post('/distance/:name-:code', async(req, res) => {
 
-    const code = req.params;
+
 
     // Check if the data is in the cache
     const cachedData = cache.get(key);
@@ -144,11 +144,11 @@ app.get("/:country", async(req, res) => {
             citySessionData: dataTwo
         };
 
-        const key = 'cachedData';
+
 
         cache.set(key, dataToCache, 3600);
 
-        res.render('country', { dataOne, dataTwo, countrySessionData: dataToCache.countrySessionData, citySessionData: dataToCache.citySessionData });
+        res.render('country', { name, code, dataOne, dataTwo, countrySessionData: dataToCache.countrySessionData, citySessionData: dataToCache.citySessionData });
     } catch (error) {
         res.send(error);
     }
