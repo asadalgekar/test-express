@@ -1,5 +1,8 @@
 // Find distance start
+const startCityDiv = document.querySelector('.select-city-start');
+const endCityDiv = document.querySelector('.select-city-end');
 
+// Add a click event listener to the selected div
 
 const startCityInput = document.querySelector('#startCity');
 const endCityInput = document.querySelector('#endCity');
@@ -10,19 +13,20 @@ const endCityOptionsDiv = document.querySelector('.end-options');
 const startCityAutoComplete = document.querySelectorAll('.auto-complete-start li');
 const endCityAutoComplete = document.querySelectorAll('.auto-complete-end li');
 
-const searchCityBar = document.querySelector("#startCity");
-const endCityBar = document.querySelector("#endCity");
-
 const startUl = document.querySelector('.auto-complete-start');
 const endUl = document.querySelector('.auto-complete-end');
 totalCityList = [];
 
-searchCityBar.addEventListener('click', () => {
+
+
+
+startCityDiv.addEventListener('click', () => {
     startCityOptionsDiv.classList.toggle('active');
-})
-endCityBar.addEventListener('click', () => {
+});
+endCityDiv.addEventListener('click', function() {
     endCityOptionsDiv.classList.toggle('active');
-})
+});
+
 
 startCityAutoComplete.forEach(city => {
     city.addEventListener('click', () => {

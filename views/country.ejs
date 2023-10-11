@@ -17,8 +17,8 @@
                 <h3>
                     <% if (locals.dataOne) { %>
                         <%= dataOne.code %>
-                            <% } else if (locals.citySessionData) { %>
-                                <%= citySessionData.code %>
+                            <% } else if (locals.countrySessionData) { %>
+                                <%= countrySessionData.code %>
                                     <% } %>
                 </h3>
                 <h6>COUNTRY CODE :</h6>
@@ -74,7 +74,7 @@
                     <% if (locals.dataOne) { %>
                         <%= dataOne.name %> Cities
                             <% } else if (locals.countrySessionData) { %>
-                                <%= countrySessionData.name %> Cities from chache
+                                <%= countrySessionData.name %> Cities
                                     <% } %>
                 </h1>
                 <div class="city-names">
@@ -97,29 +97,19 @@
                                         </td>
                                     </tr>
                                     <% }); %>
-                                        <% } else if (locals.DataTwo) { %>
-                                            <% DataTwo.forEach(data => { %>
-                                                <tr>
-                                                    <td> from session
-                                                        <%= data.city %>
-                                                    </td>
-                                                    <td>
-                                                        <%= data.population %>
-                                                    </td>
-                                                </tr>
-                                                <% }); %>
-                                                    <% } else if (locals.citySessionData) { %>
-                                                        <% citySessionData.forEach(data => { %>
-                                                            <tr>
-                                                                <td> from cached miss
-                                                                    <%= data.city %>
-                                                                </td>
-                                                                <td>
-                                                                    <%= data.population %>
-                                                                </td>
-                                                            </tr>
-                                                            <% }); %>
-                                                                <% } %>
+                                        <% } %>
+                                            <%  if (locals.citySessionData) { %>
+                                                <% citySessionData.forEach(data => { %>
+                                                    <tr>
+                                                        <td>
+                                                            <%= data.city %>
+                                                        </td>
+                                                        <td>
+                                                            <%= data.population %>
+                                                        </td>
+                                                    </tr>
+                                                    <% }); %>
+                                                        <% } %>
                         </tbody>
                     </table>
                 </div>
@@ -134,13 +124,13 @@
                             <div class="label ">
                                 <h1>find distance</h1>
                             </div>
-                            <div class="group1 ">
-                                <div class="select-city ">
-                                    <div class="select-text ">
-                                        <input type="text " name="start " id="startCity " placeholder="Start city ">
+                            <div class="group1">
+                                <div class="select-city">
+                                    <div class="select-text select-city-start">
+                                        <input type="text" name="start" id="startCity" placeholder="Start city" required>
                                     </div>
                                 </div>
-                                <div class="start-options ">
+                                <div class="start-options">
                                     <ul class=" auto-complete auto-complete-start ">
                                         <% if (locals.dataTwo) { %>
                                             <ul>
@@ -164,8 +154,8 @@
                             </div>
                             <div class="group2">
                                 <div class="select-city">
-                                    <div class="select-text">
-                                        <input type="text" name="end" id="endCity" placeholder="End city">
+                                    <div class="select-text select-city-end">
+                                        <input type="text" name="end" id="endCity" placeholder="End city" required>
                                     </div>
                                 </div>
                                 <div class="end-options">
@@ -208,23 +198,53 @@
                         </div>
 
                         <div class="output-value">
-                            <% if(locals.distance){ %>
+                            <% if(locals.distance == 0.00){ %>
                                 <h4>
-                                    <%= distance %> <span>Miles</span></h4>
-                                <% } else { %>
-                                    <h4>0 <span>Miles</span></h4>
-                                    <% } %>
+                                    0.0 <span>Miles</span></h4>
+                                <% } else if(locals.distance ){%>
+                                    <h4>
+                                        <%= distance %> 0 <span>Miles</span></h4>
+                                    <% } else { %>
+                                        <h4>
+                                            0 <span>Miles</span></h4>
+                                        </h4>
+
+                                        <% } %>
+
                         </div>
                     </div>
-
                 </div>
             </div>
-
         </div>
-
-
     </main>
 
     <script src="js/cintyinfo.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const outputDiv = document.querySelector('.output-value');
+
+            if (outputDiv) {
+                // Extract the text content from the div
+                const textContent = outputDiv.textContent;
+                // Define a regular expression to match digits
+                var digitsOnly = textContent.replace(/[^0-9]/g, '');
+
+                // Trim any leading or trailing spaces from the string.
+                var trimmedDigits = digitsOnly.trim();
+
+                // Check if distance is not 0
+                if (trimmedDigits !== '0') {
+                    const outputSideDiv = document.querySelector('.output-side');
+                    if (outputSideDiv) {
+                        outputSideDiv.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            }
+        });
+    </script>
 
     <%- include("partials/footer.ejs") %>

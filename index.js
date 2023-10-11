@@ -44,8 +44,7 @@ app.get("/", async(req, res) => {
             if (err) {
                 console.error('Error destroying session:', err);
             }
-            // Redirect or send a response as needed
-            console.log("Session cleared")
+
         });
         const response = await axios.get('https://wft-geo-db.p.rapidapi.com/v1/geo/countries?limit=10', {
             headers: {
@@ -73,44 +72,45 @@ app.post('/distance', async(req, res) => {
     if (cachedData) {
         // Data is cached, you can use it
         // res.json({ message: 'Data is cached', data: cachedData });
-        res.render('country', { countrySessionData: cachedData.countrySessionData, citySessionData: cachedData.citySessionData });
+
+        const cityIdMap = {};
+        const allCities = cachedData.citySessionData;
+        allCities.forEach(element => {
+            cityIdMap[element.city] = element.id;
+        });
+
+        const startCity = req.body.start;
+        const endCity = req.body.end;
+
+        let distance;
+        if (startCity === endCity) {
+            distance = 0.00;
+        } else {
+            try {
+                const response = await axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/places/${cityIdMap[startCity]}/distance?toPlaceId=${cityIdMap[endCity]}`, {
+                    headers: {
+                        'X-RapidAPI-Key': process.env.API_KEY,
+                        'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
+                    }
+                });
+                distance = response.data.data;
+            } catch (error) {
+                // Handle any errors (e.g., invalid cities, API issues)
+                console.error('Error calculating distance:', error);
+                return res.status(500).json({ error: 'An error occurred while calculating distance' });
+            }
+        }
+        res.render('country', { distance, countrySessionData: cachedData.countrySessionData, citySessionData: cachedData.citySessionData });
     } else {
         // Data is not in the cache, you can handle this case
         res.json({ message: 'Data is not cached' });
     }
 
-    //     try {
-    // const headers = {
-    //     'X-RapidAPI-Key': process.env.API_KEY,
-    //     'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
-    // };
-    //         const response = await axios.get(`
-    //https: //wft-geo-db.p.rapidapi.com/v1/geo/cities?countryIds=${code}`, { headers });
-    //         const cachedMissedCityData = response.data.data;
-
-    //         // Store the fetched data in the cache with a defined expiration time (e.g., 3600 seconds)
-    //         cache.set(key, cachedMissedCityData, 3600);
-
-    //         const renderCitySessionData = req.session.citySessionData;
-    //         const renderCountrySessionData = req.session.countrySessionData;
-
-    //         res.render('country', { renderCitySessionData, renderCountrySessionData, cachedMissedCityData });
-    //     } catch (error) {
-    //         console.error('Error fetching data:', error);
-    //         res.status(500).json({ error: 'An error occurred while fetching data' });
-    //     }
-    // }
-});
-
-app.get('/favicon.ico', (req, res) => {
-    // Return a 204 No Content response to handle it silently
-    console.log("favicon route hit")
-    res.status(204).end();
 });
 
 // country details route
 app.get("/:country", async(req, res) => {
-    console.log("country route hit");
+
 
     try {
         const countryName = req.params.country;
@@ -144,7 +144,7 @@ app.get("/:country", async(req, res) => {
 
 
 
-        cache.set(key, dataToCache, 3600);
+        cache.set(key, dataToCache, 33600);
 
         res.render('country', { dataOne, dataTwo });
     } catch (error) {
