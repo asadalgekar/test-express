@@ -65,17 +65,15 @@ app.get("/", async(req, res) => {
 // distance route
 // Define a cache key for your data
 const key = '111';
-app.post('/distance/:name-:code', async(req, res) => {
-
-
+app.post('/distance', async(req, res) => {
 
     // Check if the data is in the cache
     const cachedData = cache.get(key);
-    console.log(cachedData)
 
     if (cachedData) {
         // Data is cached, you can use it
-        res.json({ message: 'Data is cached', data: cachedData });
+        // res.json({ message: 'Data is cached', data: cachedData });
+        res.render('country', { countrySessionData: cachedData.countrySessionData, citySessionData: cachedData.citySessionData });
     } else {
         // Data is not in the cache, you can handle this case
         res.json({ message: 'Data is not cached' });
@@ -148,7 +146,7 @@ app.get("/:country", async(req, res) => {
 
         cache.set(key, dataToCache, 3600);
 
-        res.render('country', { name, code, dataOne, dataTwo, countrySessionData: dataToCache.countrySessionData, citySessionData: dataToCache.citySessionData });
+        res.render('country', { dataOne, dataTwo });
     } catch (error) {
         res.send(error);
     }

@@ -74,7 +74,7 @@
                     <% if (locals.dataOne) { %>
                         <%= dataOne.name %> Cities
                             <% } else if (locals.countrySessionData) { %>
-                                <%= countrySessionData.name %> Cities
+                                <%= countrySessionData.name %> Cities from chache
                                     <% } %>
                 </h1>
                 <div class="city-names">
@@ -108,8 +108,8 @@
                                                     </td>
                                                 </tr>
                                                 <% }); %>
-                                                    <% } else if (locals.renderCitySessionData) { %>
-                                                        <% renderCitySessionData.forEach(data => { %>
+                                                    <% } else if (locals.citySessionData) { %>
+                                                        <% citySessionData.forEach(data => { %>
                                                             <tr>
                                                                 <td> from cached miss
                                                                     <%= data.city %>
@@ -129,7 +129,7 @@
         <div class="distance-form container">
             <div class="form-wrapper">
                 <div class="form-side">
-                    <form class="form" action="/distance/<%= name%>-<%= code %>" method="POST">
+                    <form class="form" action="/distance %>" method="POST">
                         <div class="groups ">
                             <div class="label ">
                                 <h1>find distance</h1>
@@ -152,7 +152,7 @@
                                             </ul>
                                             <% } else { %>
                                                 <ul>
-                                                    <% renderCitySessionData.forEach(element => { %>
+                                                    <% citySessionData.forEach(element => { %>
                                                         <li data-option-element-city="<%=element.city %>">
                                                             <%= element.city %>
                                                         </li>
@@ -180,7 +180,7 @@
                                             </ul>
                                             <% } else { %>
                                                 <ul>
-                                                    <% renderCitySessionData.forEach(element => { %>
+                                                    <% citySessionData.forEach(element => { %>
                                                         <li data-option-element-city="<%=element.city %>">
                                                             <%= element.city %>
                                                         </li>
