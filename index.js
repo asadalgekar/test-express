@@ -63,7 +63,8 @@ app.get("/", async(req, res) => {
 });
 
 // distance route
-const key = '111'; // Define a cache key for your data
+// Define a cache key for your data
+const key = '111';
 app.post('/distance/:name-:code', async(req, res) => {
 
     const code = req.params;
@@ -103,12 +104,6 @@ app.post('/distance/:name-:code', async(req, res) => {
     // }
 });
 
-
-
-
-
-
-
 app.get('/favicon.ico', (req, res) => {
     // Return a 204 No Content response to handle it silently
     console.log("favicon route hit")
@@ -145,14 +140,15 @@ app.get("/:country", async(req, res) => {
         const dataTwo = responseTwo.data.data;
 
         const dataToCache = {
-            citySessionData: dataTwo,
             countrySessionData: dataOne,
+            citySessionData: dataTwo
         };
 
+        const key = 'cachedData';
 
         cache.set(key, dataToCache, 3600);
 
-        res.render('country', { name: name, code: code, dataOne, dataTwo });
+        res.render('country', { dataOne, dataTwo, countrySessionData: dataToCache.countrySessionData, citySessionData: dataToCache.citySessionData });
     } catch (error) {
         res.send(error);
     }

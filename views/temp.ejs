@@ -1,0 +1,96 @@
+<!-- Find distance -->
+<div class="distance-form container">
+    <div class="form-wrapper">
+        <div class="form-side">
+            <form action="/distance/<%= name%>-<%= code %>" method="POST">
+                <div class="groups ">
+                    <div class="label ">
+                        <h1>find distance</h1>
+                    </div>
+                    <div class="group1 ">
+                        <div class="select-city ">
+                            <div class="select-text ">
+                                <input type="text " name="start " id="startCity " placeholder="Start city ">
+                            </div>
+                        </div>
+                        <div class="start-options ">
+                            <ul class=" auto-complete auto-complete-start ">
+                                <% if (locals.dataTwo) { %>
+                                    <ul>
+                                        <% dataTwo.forEach(element => { %>
+                                            <li data-option-element-city="<%=element.city %>">
+                                                <%= element.city %>
+                                            </li>
+                                            <% }); %>
+                                    </ul>
+                                    <% } else { %>
+                                        <ul>
+                                            <% renderCitySessionData.forEach(element => { %>
+                                                <li data-option-element-city="<%=element.city %>">
+                                                    <%= element.city %>
+                                                </li>
+                                                <% }); %>
+                                        </ul>
+                                        <% } %>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="group2">
+                        <div class="select-city">
+                            <div class="select-text">
+                                <input type="text" name="end" id="endCity" placeholder="End city">
+                            </div>
+                        </div>
+                        <div class="end-options">
+                            <ul class="auto-complete  auto-complete-end">
+                                <% if (locals.dataTwo) { %>
+                                    <ul>
+                                        <% dataTwo.forEach(element => { %>
+                                            <li data-option-element-city="<%= element.city %>">
+                                                <%= element.city %>
+                                            </li>
+                                            <% }); %>
+                                    </ul>
+                                    <% } else { %>
+                                        <ul>
+                                            <% renderCitySessionData.forEach(element => { %>
+                                                <li data-option-element-city="<%=element.city %>">
+                                                    <%= element.city %>
+                                                </li>
+                                                <% }); %>
+                                        </ul>
+                                        <% } %>
+
+
+
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="group3">
+                        <button type="submit">Calculate Distance</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="output-side">
+            <div class="output-wrapper">
+                <div class="output-text">
+                    <h1> distance</h>
+                        <span class="output-logo"><i class="fa-solid fa-car-side"></i></span>
+                </div>
+
+                <div class="output-value">
+                    <% if(locals.distance){ %>
+                        <h4>
+                            <%= distance %> <span>Miles</span></h4>
+                        <% } else { %>
+                            <h4>0 <span>Miles</span></h4>
+                            <% } %>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

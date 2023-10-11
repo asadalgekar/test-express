@@ -1,72 +1,135 @@
 <%- include("partials/header.ejs")%>
-    <div class="cities-list">
-        <h1>
-            <% if (locals.dataOne) { %>
-                <%= dataOne.name %> Cities
-                    <% } else if (locals.renderCountrySessionData) { %>
-                        <%= renderCountrySessionData.name %> Cities
-                            <% } else if (locals.cachedMissedCountryData) { %>
-                                <%= cachedMissedCountryData.name %> Cities
+    <main>
+        <div class="country-specific">
+            <div class="country-details">
+                <div class="country-name">
+                    <h3>
+                        <% if (locals.dataOne) { %>
+                            <%= dataOne.name %>
+                                <% } else if (locals.countrySessionData) { %>
+                                    <%= countrySessionData.name %>
+                                        <% } %>
+                    </h3>
+                    <h6>COUNTRY :</h6>
+                </div>
+            </div>
+            <div class="country-code">
+                <h3>
+                    <% if (locals.dataOne) { %>
+                        <%= dataOne.code %>
+                            <% } else if (locals.citySessionData) { %>
+                                <%= citySessionData.code %>
                                     <% } %>
-        </h1>
-        <div class="city-names">
-            <table class="styled-table">
-                <thead>
-                    <tr>
-                        <th>City Name</th>
-                        <th>Population</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% if (locals.dataTwo) { %>
-                        <% dataTwo.forEach(data => { %>
-                            <tr>
-                                <td>
-                                    <%= data.city %>
-                                </td>
-                                <td>
-                                    <%= data.population %>
-                                </td>
-                            </tr>
-                            <% }); %>
-                                <% } else if (locals.renderCitySessionData) { %>
-                                    <% renderCitySessionData.forEach(data => { %>
-                                        <tr>
-                                            <td> from session
-                                                <%= data.city %>
-                                            </td>
-                                            <td>
-                                                <%= data.population %>
-                                            </td>
-                                        </tr>
-                                        <% }); %>
-                                            <% } else if (locals.cachedMissedCityData) { %>
-                                                <% cachedMissedCityData.forEach(data => { %>
-                                                    <tr>
-                                                        <td> from cached miss
-                                                            <%= data.city %>
-                                                        </td>
-                                                        <td>
-                                                            <%= data.population %>
-                                                        </td>
-                                                    </tr>
-                                                    <% }); %>
-                                                        <% } %>
-                </tbody>
-            </table>
+                </h3>
+                <h6>COUNTRY CODE :</h6>
+            </div>
         </div>
-    </div>
+
+        <!-- Stats, City lists -->
+        <div class="cities-details container">
+            <div class="city-info">
+                <div class="collapse-link">
+                    <h1>statistics</h1>
+                </div>
+                <div class="capital collapse-link-data">
+                    <h3><i class="fa-solid fa-building-columns" style="color: #263b6b;"></i>capital</h3>
+                    <h4>
+                        <% if (locals.dataOne) { %>
+                            <%= dataOne.capital %>
+                                <% } else if (locals.countrySessionData) { %>
+                                    <%= countrySessionData.capital %>
+                                        <% } %>
+                    </h4>
+                </div>
+                <div class="travel-info">
+                    <div class="collapse-link ">
+                        <h1>travel</h1>
+                    </div>
+                    <div class="currency collapse-link-data">
+                        <h3><i class="fa-solid fa-dollar-sign" style="color: #263b6b;"></i>currency</h3>
+                        <h4>
+                            <% if (locals.dataOne) { %>
+                                <%= dataOne.currencyCodes %>
+                                    <% } else if (locals.countrySessionData) { %>
+                                        <%= countrySessionData.currencyCodes %>
+                                            <% } %>
+                        </h4>
+                    </div>
+                    <div class="calling-code collapse-link-data">
+                        <h3><i class="fa-solid fa-phone" style="color: #263b6b;"></i>Calling code</h3>
+                        <h4>
+                            <% if (locals.dataOne) { %>
+                                <%= dataOne.callingCode %>
+                                    <% } else if (locals.countrySessionData) { %>
+                                        <%= countrySessionData.callingCode %>
+                                            <% } %>
+                        </h4>
+                    </div>
+                </div>
+            </div>
 
 
+            <div class="cities-list">
+                <h1>
+                    <% if (locals.dataOne) { %>
+                        <%= dataOne.name %> Cities
+                            <% } else if (locals.countrySessionData) { %>
+                                <%= countrySessionData.name %> Cities
+                                    <% } %>
+                </h1>
+                <div class="city-names">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>City Name</th>
+                                <th>Population</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (locals.dataTwo) { %>
+                                <% dataTwo.forEach(data => { %>
+                                    <tr>
+                                        <td>
+                                            <%= data.city %>
+                                        </td>
+                                        <td>
+                                            <%= data.population %>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                                        <% } else if (locals.DataTwo) { %>
+                                            <% DataTwo.forEach(data => { %>
+                                                <tr>
+                                                    <td> from session
+                                                        <%= data.city %>
+                                                    </td>
+                                                    <td>
+                                                        <%= data.population %>
+                                                    </td>
+                                                </tr>
+                                                <% }); %>
+                                                    <% } else if (locals.renderCitySessionData) { %>
+                                                        <% renderCitySessionData.forEach(data => { %>
+                                                            <tr>
+                                                                <td> from cached miss
+                                                                    <%= data.city %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= data.population %>
+                                                                </td>
+                                                            </tr>
+                                                            <% }); %>
+                                                                <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
 
 
+    </main>
 
-    <h1>No cities cached data yet</h1>
-    <form action="/distance/<%= name%>-<%= code %>" method="POST">
-        <h2>Try for session data</h2>
-        <button type="submit">Hit</button>
-    </form>
+    <script src="js/cintyinfo.js"></script>
 
-    </body>
-
-    </html>
+    <%- include("partials/footer.ejs") %>
