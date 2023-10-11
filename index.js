@@ -20,10 +20,6 @@ app.use(session({
 }));
 
 
-
-// Use the session middleware in your application.
-app.use(sessionMiddleware);
-
 // Get the current filename (this file's URL)
 const __filename = fileURLToPath(
     import.meta.url)
