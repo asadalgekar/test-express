@@ -22,7 +22,7 @@ app.use(express.static('public'));
 const sessionSecret = process.env.SESSION_SECRET;
 
 // Set the resave and saveUninitialized options based on the environment variables.
-const resave = process.env.RESAVE === "true";
+const resave = process.env.RESAVE === "false";
 const saveUninitialized = process.env.SAVE_UNINITIALIZED === "true";
 
 // Create the session middleware.
@@ -79,6 +79,7 @@ app.get("/", async(req, res) => {
 
 // distance route
 app.post('/distance', (req, res) => {
+
     // Check if renderCitySessionData is available in the session
     if (req.session.citySessionData && req.session.countrySessionData) {
         const renderCitySessionData = req.session.citySessionData;
@@ -99,6 +100,18 @@ app.get('/favicon.ico', (req, res) => {
 // country details route
 app.get("/:country", async(req, res) => {
     console.log("country route hit")
+    try {
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Error destroying session:', err);
+            }
+            // Redirect or send a response as needed
+            console.log("Session cleared");
+        });
+    } catch (error) {
+        console.log("cache clear error: ", error)
+    }
+
     try {
         const countryName = req.params.country;
         const splitCountryName = countryName.split("-");
