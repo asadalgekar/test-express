@@ -13,24 +13,12 @@ let secretKey = '1234'
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// app.use(session({
-//     secret: '1222', // a secret string used to sign the session ID cookie
-//     resave: false, // don't save session if unmodified
-//     saveUninitialized: false // don't create session until something stored
-// }));
+app.use(session({
+    secret: '1222', // a secret string used to sign the session ID cookie
+    resave: true, // don't save session if unmodified
+    saveUninitialized: false // don't create session until something stored
+}));
 
-const sessionSecret = process.env.SESSION_SECRET;
-
-// Set the resave and saveUninitialized options based on the environment variables.
-const resave = process.env.RESAVE === "false";
-const saveUninitialized = process.env.SAVE_UNINITIALIZED === "true";
-
-// Create the session middleware.
-const sessionMiddleware = session({
-    secret: sessionSecret,
-    resave,
-    saveUninitialized,
-});
 
 
 // Use the session middleware in your application.
