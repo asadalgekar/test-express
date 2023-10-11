@@ -73,7 +73,11 @@ app.post('/distance', (req, res) => {
         res.status(400).json({ error: 'renderCitySessionData not found in session' });
     }
 });
-
+app.get('/favicon.ico', (req, res) => {
+    // Return a 204 No Content response to handle it silently
+    console.log("favicon route hit")
+    res.status(204).end();
+});
 
 // country details route
 app.get("/:country", async(req, res) => {
