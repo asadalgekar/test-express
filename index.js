@@ -128,7 +128,17 @@ app.get("/:country", async(req, res) => {
 
         cache.set(key, dataToCache, 34600);
 
-        res.render('country', { dataOne, dataTwo });
+        let cachedData = cache.get(key);
+
+        let message;
+        if (cachedData) {
+            message = "Data cached in country route:"
+        } else {
+            message = "Data not cached in country route:"
+            cachedData = "No cached avail"
+        }
+
+        res.render('country', { message, cachedData: cachedData.citySessionData, dataOne, dataTwo });
     } catch (error) {
         res.send(error);
     }

@@ -216,6 +216,19 @@
                 </div>
             </div>
         </div>
+
+        <% if(locals.message && locals.cachedData)  {%>
+            <h3>
+                <%= message %>
+            </h3>
+            <% cachedData.forEach(city => { %>
+                <h3>
+                    <%= city.name %>
+                </h3>
+                <% }); %>
+
+
+                    <% } %>
     </main>
 
     <script src="js/cintyinfo.js"></script>
