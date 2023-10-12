@@ -71,7 +71,7 @@ app.post('/distance', async(req, res) => {
     const cachedData = cache.get(key);
     let distance;
 
-    if (cachedData) {
+    if (cachedData.citySessionData && cachedData.countrySessionData) {
         const cityIdMap = {};
         const allCities = cachedData.citySessionData;
         allCities.forEach(element => { cityIdMap[element.city] = element.id; });
@@ -105,7 +105,7 @@ app.post('/distance', async(req, res) => {
 
     } else {
         // Data is not in the cache, you can handle this case
-        res.json({ message: 'Error with API server, please go back to home page' });
+        res.json({ message: ' any one data missing Error with API server, please go back to home page' });
     }
 
 
@@ -130,55 +130,38 @@ app.get("/:country", async(req, res) => {
             'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
         };
 
+        const requestOne = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${code}`, { headers });
+        const responseOne = await requestOne;
+        const dataOne = responseOne.data.data;
 
-        function synchronousDelay() {
-            const start = Date.now();
-            while (Date.now() - start < 1000) {
-                // This loop runs for exactly 1 second
-            }
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        const requestTwo = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?countryIds=${code}`, { headers });
+        const responseTwo = await requestTwo;
+        const dataTwo = responseTwo.data.data;
+        // cache.del(key);
+        const dataToCache = {
+            countrySessionData: dataOne,
+            citySessionData: dataTwo
+        };
+
+
+
+        cache.set(key, dataToCache);
+
+        let cachedData = cache.get(key);
+
+        let message;
+        if (cachedData) {
+
+
+        } else {
+            message = "Data not cached in country route:"
+            cachedData = "No cached avail"
         }
 
 
-
-        async function fetchData(code, headers) {
-
-            try {
-                const requestOne = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${code}`, { headers });
-                const responseOne = await requestOne;
-                const dataOne = responseOne.data.data;
-
-
-                // Block the main stack for 1 seconds
-                synchronousDelay();
-                const requestTwo = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?countryIds=${code}`, { headers });
-                const responseTwo = await requestTwo;
-                const dataTwo = responseTwo.data.data;
-                // cache.del(key);
-                const dataToCache = {
-                    countrySessionData: dataOne,
-                    citySessionData: dataTwo
-                };
-
-
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                cache.set(key, dataToCache);
-
-
-
-
-                res.render('country', { dataOne, dataTwo });
-
-                // Continue with any further code that depends on both dataOne and dataTwo
-            } catch (error) {
-                // Handle errors here
-                console.error("An error occurred:", error);
-            }
-        }
-
-        // Call the function with the appropriate 'code' and 'headers' values
-        fetchData(code, headers);
-
-
+        res.render('country', { dataOne, dataTwo });
     } catch (error) {
         res.send(error);
     }
