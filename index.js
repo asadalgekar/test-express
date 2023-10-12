@@ -134,32 +134,23 @@ app.get("/:country", async(req, res) => {
         const responseOne = await requestOne;
         const dataOne = responseOne.data.data;
 
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         const requestTwo = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?countryIds=${code}`, { headers });
         const responseTwo = await requestTwo;
         const dataTwo = responseTwo.data.data;
-        cache.del(key);
-        const dataToCache = {
-            countrySessionData: dataOne,
-            citySessionData: dataTwo
-        };
 
 
+
+        // cache.del(key);
+        // const dataToCache = {
+        //     countrySessionData: dataOne,
+        //     citySessionData: dataTwo
+        // };
 
         cache.set(key, dataToCache);
 
         let cachedData = cache.get(key);
-
-        let message;
-        if (cachedData) {
-
-
-        } else {
-            message = "Data not cached in country route:"
-            cachedData = "No cached avail"
-        }
-
 
         res.render('country', { message, cachedData: cachedData.citySessionData, dataOne, dataTwo });
     } catch (error) {
