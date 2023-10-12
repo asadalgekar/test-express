@@ -133,12 +133,11 @@ app.get("/:country", async(req, res) => {
 
         function synchronousDelay() {
             const start = Date.now();
-            while (Date.now() - start < ms) {
-                if (Date.now() - start >= 1000) {
-                    break;
-                }
+            while (Date.now() - start < 1000) {
+                // This loop runs for exactly 1 second
             }
         }
+
 
 
         async function fetchData(code, headers) {
