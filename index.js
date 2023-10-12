@@ -67,6 +67,7 @@ app.get("/", async(req, res) => {
 app.post('/distance', async(req, res) => {
 
     // Check if the data is in the cache
+
     const cachedData = cache.get(key);
 
     if (cachedData) {
@@ -125,10 +126,12 @@ app.get("/:country", async(req, res) => {
         let message;
         if (cachedData) {
             message = "Data cached in country route:"
+            res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate');
         } else {
             message = "Data not cached in country route:"
             cachedData = "No cached avail"
         }
+
 
         res.render('country', { message, cachedData: cachedData.citySessionData, dataOne, dataTwo });
     } catch (error) {

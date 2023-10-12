@@ -10,5 +10,22 @@
             "src": "/(.*)",
             "dest": "/"
         }
+    ],
+    "headers": [{
+            "source": "/country/:country",
+            "headers": [{
+                "key": "Cache-Control",
+                "value": "s-maxage=120, stale-while-revalidate"
+            }]
+        },
+        {
+            "source": "/distance",
+            "headers": [{
+                "key": "Cache-Control",
+                "value": "s-maxage=120, stale-while-revalidate"
+            }]
+        }
     ]
+
+
 }
