@@ -131,10 +131,12 @@ app.get("/:country", async(req, res) => {
         };
 
 
-        function synchronousDelay(ms) {
+        function synchronousDelay() {
             const start = Date.now();
             while (Date.now() - start < ms) {
-                // This loop will block the main stack
+                if (Date.now() - start >= 1000) {
+                    break;
+                }
             }
         }
 
@@ -147,8 +149,8 @@ app.get("/:country", async(req, res) => {
                 const dataOne = responseOne.data.data;
 
 
-                // Block the main stack for 1.5 seconds
-                synchronousDelay(500);
+                // Block the main stack for 1 seconds
+                synchronousDelay();
                 const requestTwo = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?countryIds=${code}`, { headers });
                 const responseTwo = await requestTwo;
                 const dataTwo = responseTwo.data.data;
