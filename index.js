@@ -81,36 +81,12 @@ app.post('/distance', async(req, res) => {
 
         const startCity = req.body.start;
         const endCity = req.body.end;
-
-        let distance;
-        if (startCity === endCity) {
-            distance = 0.00;
-        } else {
-
-            setTimeout(async() => {
-                try {
-                    const response = await axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/places/${cityIdMap[startCity]}/distance?toPlaceId=${cityIdMap[endCity]}`, {
-                        headers: {
-                            'X-RapidAPI-Key': process.env.API_KEY,
-                            'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
-                        }
-                    });
-                    distance = response.data.data;
-                    console.log(distance);
-                    // Render the page with the distance
-                    res.render('country', { distance, countrySessionData: cachedData.countrySessionData, citySessionData: cachedData.citySessionData });
-                } catch (error) {
-                    console.error('Error calculating distance:', error);
-                    return res.status(500).json({ error: 'An error occurred on server while calculating distance, please go back to main page.' });
-                }
-            }, 2000); // Delay the API call by 2 seconds (2000 milliseconds)
-
-        }
-
+        res.json({ message: 'Data successfully cached', allCities });
     } else {
         // Data is not in the cache, you can handle this case
         res.json({ message: 'Data is not cached' });
     }
+
 
 });
 
