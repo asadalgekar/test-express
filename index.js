@@ -119,7 +119,7 @@ app.get("/:country", async(req, res) => {
 
 
 
-        cache.set(key, dataToCache, 34600);
+        cache.set(key, dataToCache);
 
         let cachedData = cache.get(key);
 
