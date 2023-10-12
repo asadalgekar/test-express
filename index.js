@@ -36,7 +36,12 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.set('public', __dirname + '/public');
 
-
+function synchronousDelay(ms) {
+    const start = Date.now();
+    while (Date.now() - start < ms) {
+        // This loop will block the main stack
+    }
+}
 // Home Route
 app.get("/", async(req, res) => {
     try {
@@ -131,12 +136,7 @@ app.get("/:country", async(req, res) => {
         };
 
 
-        function synchronousDelay(ms) {
-            const start = Date.now();
-            while (Date.now() - start < ms) {
-                // This loop will block the main stack
-            }
-        }
+
 
 
         async function fetchData(code, headers) {
