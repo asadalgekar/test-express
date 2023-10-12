@@ -10,7 +10,7 @@ const cache = new NodeCache();
 config();
 const app = express();
 const port = process.env.PORT || 3000;
-let secretKey = '1234'
+const key = '111';
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
@@ -63,7 +63,7 @@ app.get("/", async(req, res) => {
 
 // distance route
 // Define a cache key for your data
-const key = '111';
+
 app.post('/distance', async(req, res) => {
 
     // Check if the data is in the cache
