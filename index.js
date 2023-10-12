@@ -143,10 +143,10 @@ app.get("/:country", async(req, res) => {
 
 
         // cache.del(key);
-        // const dataToCache = {
-        //     countrySessionData: dataOne,
-        //     citySessionData: dataTwo
-        // };
+        const dataToCache = {
+            countrySessionData: dataOne,
+            citySessionData: dataTwo
+        };
 
         cache.set(key, dataToCache);
 
