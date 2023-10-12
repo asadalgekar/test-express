@@ -71,17 +71,9 @@ app.post('/distance', async(req, res) => {
 
     if (cachedData) {
         // Data is cached, you can use it
-        // res.json({ message: 'Data is cached', data: cachedData });
+        res.json({ message: 'Data is cached', data: cachedData });
 
-        const cityIdMap = {};
-        const allCities = cachedData.citySessionData;
-        allCities.forEach(element => {
-            cityIdMap[element.city] = element.id;
-        });
 
-        const startCity = req.body.start;
-        const endCity = req.body.end;
-        res.json({ message: 'Data successfully cached', allCities });
     } else {
         // Data is not in the cache, you can handle this case
         res.json({ message: 'Data is not cached' });
