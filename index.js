@@ -140,12 +140,11 @@ app.get("/:country", async(req, res) => {
                 // Process dataOne or perform other operations here
 
                 // Introduce a delay using a promise
-                await new Promise(resolve => setTimeout(resolve, 1500));
+                await new Promise(resolve => setTimeout(resolve, 1000));
 
                 const requestTwo = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?countryIds=${code}`, { headers });
                 const responseTwo = await requestTwo;
                 const dataTwo = responseTwo.data.data;
-                await new Promise(resolve => setTimeout(resolve, 1000));
                 // cache.del(key);
                 const dataToCache = {
                     countrySessionData: dataOne,
