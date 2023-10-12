@@ -126,7 +126,7 @@ app.get("/:country", async(req, res) => {
         let message;
         if (cachedData) {
             message = "Data cached in country route:"
-            res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate');
+
         } else {
             message = "Data not cached in country route:"
             cachedData = "No cached avail"
