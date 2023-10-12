@@ -130,38 +130,48 @@ app.get("/:country", async(req, res) => {
             'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
         };
 
-        const requestOne = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${code}`, { headers });
-        const responseOne = await requestOne;
-        const dataOne = responseOne.data.data;
+        async function fetchData(code, headers) {
 
-        await new Promise(resolve => setTimeout(resolve, 1500));
+            try {
+                const requestOne = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${code}`, { headers });
+                const responseOne = await requestOne;
+                const dataOne = responseOne.data.data;
 
-        const requestTwo = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?countryIds=${code}`, { headers });
-        const responseTwo = await requestTwo;
-        const dataTwo = responseTwo.data.data;
-        // cache.del(key);
-        const dataToCache = {
-            countrySessionData: dataOne,
-            citySessionData: dataTwo
-        };
+                // Process dataOne or perform other operations here
 
+                // Introduce a delay using a promise
+                await new Promise(resolve => setTimeout(resolve, 1500));
 
+                const requestTwo = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?countryIds=${code}`, { headers });
+                const responseTwo = await requestTwo;
+                const dataTwo = responseTwo.data.data;
 
-        cache.set(key, dataToCache);
-
-        let cachedData = cache.get(key);
-
-        let message;
-        if (cachedData) {
+                // cache.del(key);
+                const dataToCache = {
+                    countrySessionData: dataOne,
+                    citySessionData: dataTwo
+                };
 
 
-        } else {
-            message = "Data not cached in country route:"
-            cachedData = "No cached avail"
+
+                cache.set(key, dataToCache);
+
+                let cachedData = cache.get(key);
+
+
+                res.render('country', { dataOne, dataTwo });
+
+                // Continue with any further code that depends on both dataOne and dataTwo
+            } catch (error) {
+                // Handle errors here
+                console.error("An error occurred:", error);
+            }
         }
 
+        // Call the function with the appropriate 'code' and 'headers' values
+        fetchData(code, headers);
 
-        res.render('country', { dataOne, dataTwo });
+
     } catch (error) {
         res.send(error);
     }
