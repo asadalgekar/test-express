@@ -67,7 +67,7 @@ app.get("/", async(req, res) => {
 app.post('/distance', async(req, res) => {
 
     // Check if the data is in the cache
-
+    synchronousDelay(1000);
     const cachedData = cache.get(key);
     let distance;
 
