@@ -148,7 +148,7 @@ app.get("/:country", async(req, res) => {
 
 
                 // Block the main stack for 1.5 seconds
-                synchronousDelay(1000);
+                synchronousDelay(500);
                 const requestTwo = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?countryIds=${code}`, { headers });
                 const responseTwo = await requestTwo;
                 const dataTwo = responseTwo.data.data;
