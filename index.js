@@ -130,6 +130,15 @@ app.get("/:country", async(req, res) => {
             'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
         };
 
+
+        function synchronousDelay(ms) {
+            const start = Date.now();
+            while (Date.now() - start < ms) {
+                // This loop will block the main stack
+            }
+        }
+
+
         async function fetchData(code, headers) {
 
             try {
@@ -137,11 +146,9 @@ app.get("/:country", async(req, res) => {
                 const responseOne = await requestOne;
                 const dataOne = responseOne.data.data;
 
-                // Process dataOne or perform other operations here
 
-                // Introduce a delay using a promise
-                await new Promise(resolve => setTimeout(resolve, 1000));
-
+                // Block the main stack for 1.5 seconds
+                synchronousDelay(1000);
                 const requestTwo = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?countryIds=${code}`, { headers });
                 const responseTwo = await requestTwo;
                 const dataTwo = responseTwo.data.data;
