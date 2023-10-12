@@ -16,8 +16,8 @@ app.use(express.static('public'));
 
 app.use(session({
     secret: '1222', // a secret string used to sign the session ID cookie
-    resave: true, // don't save session if unmodified
-    saveUninitialized: false // don't create session until something stored
+    resave: false, // don't save session if unmodified
+    saveUninitialized: true // don't create session until something stored
 }));
 
 
