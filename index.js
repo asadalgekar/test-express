@@ -71,42 +71,49 @@ app.post('/distance', async(req, res) => {
     const cachedData = cache.get(key);
     let distance;
 
-    if (cachedData && cachedData.citySessionData && cachedData.countrySessionData) {
-        const cityIdMap = {};
-        const allCities = cachedData.citySessionData;
-        allCities.forEach(element => { cityIdMap[element.city] = element.id; });
-        const startCity = req.body.start;
-        const endCity = req.body.end;
+    if (cacheData) {
+        if (cachedData.citySessionData && cachedData.countrySessionData) {
+            const cityIdMap = {};
+            const allCities = cachedData.citySessionData;
+            allCities.forEach(element => { cityIdMap[element.city] = element.id; });
+            const startCity = req.body.start;
+            const endCity = req.body.end;
 
-        if (startCity === endCity) {
-            distance = 0.00;
+            if (startCity === endCity) {
+                distance = 0.00;
+
+            } else {
+                try {
+                    const response = await axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/places/${cityIdMap[startCity]}/distance?toPlaceId=${cityIdMap[endCity]}`, {
+                        headers: {
+                            'X-RapidAPI-Key': process.env.API_KEY,
+                            'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
+                        }
+                    });
+                    distance = response.data.data;
+
+
+
+                } catch (error) {
+                    console.error('Error calculating distance:', error);
+                    return res.status(500).json({ error: 'An error occurred on the server while calculating distance, please go back to the main page.' });
+                }
+
+            }
+            res.render('country', { distance, countrySessionData: cachedData.countrySessionData, citySessionData: cachedData.citySessionData });
+
+
 
         } else {
-            try {
-                const response = await axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/places/${cityIdMap[startCity]}/distance?toPlaceId=${cityIdMap[endCity]}`, {
-                    headers: {
-                        'X-RapidAPI-Key': process.env.API_KEY,
-                        'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
-                    }
-                });
-                distance = response.data.data;
-
-
-
-            } catch (error) {
-                console.error('Error calculating distance:', error);
-                return res.status(500).json({ error: 'An error occurred on the server while calculating distance, please go back to the main page.' });
-            }
-
+            // Data is not in the cache, you can handle this case
+            res.json({ message: ' any one data missing Error with API server, please go back to home page' });
         }
-        res.render('country', { distance, countrySessionData: cachedData.countrySessionData, citySessionData: cachedData.citySessionData });
-
-
 
     } else {
-        // Data is not in the cache, you can handle this case
-        res.json({ message: ' any one data missing Error with API server, please go back to home page' });
+        res.json({ message: '  Error with API server, please go back to home page' });
     }
+
+
 
 
 });
