@@ -153,15 +153,14 @@ app.get("/:country", async(req, res) => {
 
         let message;
         if (cachedData) {
-
+            res.render('country', { dataOne, dataTwo });
 
         } else {
-            message = "Data not cached in country route:"
-            cachedData = "No cached avail"
+            res.json({ message: "cahcing error" })
         }
 
 
-        res.render('country', { dataOne, dataTwo });
+
     } catch (error) {
         res.send(error);
     }
