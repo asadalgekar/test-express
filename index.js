@@ -71,8 +71,6 @@ app.post('/distance', async(req, res) => {
     const cachedData = cache.get(key);
     let distance;
 
-    const cachedData = cache.get(key);
-    let distance;
 
     if (cachedData) {
         if (cachedData.citySessionData && cachedData.countrySessionData) {
