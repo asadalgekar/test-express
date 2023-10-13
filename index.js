@@ -71,7 +71,10 @@ app.post('/distance', async(req, res) => {
     const cachedData = cache.get(key);
     let distance;
 
-    if (cacheData) {
+    const cachedData = cache.get(key);
+    let distance;
+
+    if (cachedData) {
         if (cachedData.citySessionData && cachedData.countrySessionData) {
             const cityIdMap = {};
             const allCities = cachedData.citySessionData;
@@ -81,7 +84,6 @@ app.post('/distance', async(req, res) => {
 
             if (startCity === endCity) {
                 distance = 0.00;
-
             } else {
                 try {
                     const response = await axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/places/${cityIdMap[startCity]}/distance?toPlaceId=${cityIdMap[endCity]}`, {
@@ -91,27 +93,20 @@ app.post('/distance', async(req, res) => {
                         }
                     });
                     distance = response.data.data;
-
-
-
                 } catch (error) {
                     console.error('Error calculating distance:', error);
                     return res.status(500).json({ error: 'An error occurred on the server while calculating distance, please go back to the main page.' });
                 }
-
             }
             res.render('country', { distance, countrySessionData: cachedData.countrySessionData, citySessionData: cachedData.citySessionData });
-
-
-
         } else {
             // Data is not in the cache, you can handle this case
-            res.json({ message: ' any one data missing Error with API server, please go back to home page' });
+            res.json({ message: 'Any data missing. Error with API server, please go back to the home page.' });
         }
-
     } else {
-        res.json({ message: '  Error with API server, please go back to home page' });
+        res.json({ message: 'Error with API server, please go back to the home page.' });
     }
+
 
 
 
