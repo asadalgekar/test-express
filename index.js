@@ -71,7 +71,7 @@ app.post('/distance', async(req, res) => {
     const cachedData = cache.get(key);
     let distance;
 
-    if (cachedData.citySessionData && cachedData.countrySessionData) {
+    if (cachedData && cachedData.citySessionData && cachedData.countrySessionData) {
         const cityIdMap = {};
         const allCities = cachedData.citySessionData;
         allCities.forEach(element => { cityIdMap[element.city] = element.id; });
