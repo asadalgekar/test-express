@@ -132,20 +132,25 @@
                                 </div>
                                 <div class="start-options">
                                     <ul class=" auto-complete auto-complete-start ">
-                                        <% if (locals.dataTwo) { %>
+                                        <% if (locals.dataOne && locals.dataTwo) { %>
                                             <ul>
                                                 <% dataTwo.forEach(element => { %>
                                                     <li data-option-element-city="<%=element.city %>">
-                                                        <%= element.city %>
+                                                        <%= element.city %> (
+                                                            <%= dataOne.code %> )
                                                     </li>
                                                     <% }); %>
                                             </ul>
-                                            <% } else { %>
+                                            <% } else if (countrySessionData.locals && citySessionData.locals) { %>
                                                 <ul>
                                                     <% citySessionData.forEach(element => { %>
-                                                        <li data-option-element-city="<%=element.city %>">
-                                                            <%= element.city %>
+                                                        <li data-option-element-city="<%= element.city %>">
+                                                            <li data-option-element-city="<%=element.city %>">
+                                                                <%= element.city %> (
+                                                                    <%= dataOne.code %> )
+                                                            </li>
                                                         </li>
+
                                                         <% }); %>
                                                 </ul>
                                                 <% } %>
@@ -160,27 +165,25 @@
                                 </div>
                                 <div class="end-options">
                                     <ul class="auto-complete  auto-complete-end">
-                                        <% if (locals.dataTwo) { %>
+                                        <% if (locals.dataOne && locals.dataTwo) { %>
                                             <ul>
                                                 <% dataTwo.forEach(element => { %>
                                                     <li data-option-element-city="<%= element.city %>">
-                                                        <%= element.city %>
+                                                        <%= element.city %> (
+                                                            <%= dataOne.code %> )
                                                     </li>
                                                     <% }); %>
                                             </ul>
-                                            <% } else { %>
+                                            <% } else if (countrySessionData.locals && citySessionData.locals){ %>
                                                 <ul>
                                                     <% citySessionData.forEach(element => { %>
                                                         <li data-option-element-city="<%=element.city %>">
-                                                            <%= element.city %>
+                                                            <%= element.city %>(
+                                                                <%= dataOne.code %>
                                                         </li>
                                                         <% }); %>
                                                 </ul>
                                                 <% } %>
-
-
-
-
                                     </ul>
                                 </div>
                             </div>
