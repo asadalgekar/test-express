@@ -62,8 +62,6 @@ app.get("/", async(req, res) => {
 });
 
 // distance route
-// Define a cache key for your data
-
 function extractCityAndCountry(inputString) {
     // Define a regular expression pattern to match city name and country code
     let pattern = /(.+)\s*\(\s*([A-Z]+)\s*\)/;
@@ -82,12 +80,9 @@ function extractCityAndCountry(inputString) {
 
 app.post('/distance', async(req, res) => {
 
-
     // Check if the data is in the cache
     const cachedData = cache.get(key);
     let distance;
-
-
     const startCity = req.body.start;
     const endCity = req.body.end;
 
@@ -111,7 +106,7 @@ app.post('/distance', async(req, res) => {
                 distance = response.data.data;
             } catch (error) {
                 console.error('Error with API server, please go back to the home page and try again after few seconds:', error);
-                return res.status(500).json({ error: 'An error occurred on the server while calculating distance, please go back to the main page and try again after few seconds.' });
+                return res.status(500).json({ error: 'An error occurred on the server while calculating distances, please go back to the main page and try again after few seconds.' });
             }
         }
         res.render('country', { distance, countrySessionData: cachedData.countrySessionData, citySessionData: cachedData.citySessionData });
@@ -131,7 +126,24 @@ app.post('/distance', async(req, res) => {
         const requestTwo = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?countryIds=${endCityInfo.countryCode}`, { headers });
         const responseTwo = await requestTwo;
         const dataTwo = responseTwo.data.data;
-        res.render('country', { dataOne, dataTwo });
+
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        const cityIdMap = {};
+        dataTwo.forEach(element => { cityIdMap[element.city] = element.id; });
+        try {
+            const response = await axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/places/${cityIdMap[startCityInfo.cityName]}/distance?toPlaceId=${cityIdMap[endCityInfo.cityName]}`, {
+                headers: {
+                    'X-RapidAPI-Key': process.env.API_KEY,
+                    'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
+                }
+            });
+            distance = response.data.data;
+        } catch (error) {
+            console.error('Error with API server, please go back to the home page and try again after few seconds:', error);
+            return res.status(500).json({ error: 'An error occurred on the server while calculating distances, please go back to the main page and try again after few seconds.' });
+        }
+
+        res.render('country', { distance, dataOne, dataTwo });
     }
 
 
@@ -180,7 +192,7 @@ app.get("/:country", async(req, res) => {
 
         let cachedData = cache.get(key);
 
-        cache.del(key);
+        // cache.del(key);
 
         res.render('country', { dataOne, dataTwo });
 
