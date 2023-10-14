@@ -21,17 +21,22 @@ totalCityList = [];
 
 
 startCityDiv.addEventListener('click', () => {
-    startCityOptionsDiv.classList.toggle('active');
+    if (startCityOptionsDiv.classList.contains('activate-options')) {
+        startCityOptionsDiv.classList.remove('activate-options');
+    } else {
+        startCityOptionsDiv.classList.add('activate-options');
+    }
 });
+
 endCityDiv.addEventListener('click', function() {
-    endCityOptionsDiv.classList.toggle('active');
+    endCityOptionsDiv.classList.toggle('activate-options');
 });
 
 
 startCityAutoComplete.forEach(city => {
     city.addEventListener('click', () => {
         startCityInput.value = city.textContent.trim();
-        startCityOptionsDiv.classList.remove('active');
+        startCityOptionsDiv.classList.remove('activate-options');
 
 
     })
@@ -39,7 +44,7 @@ startCityAutoComplete.forEach(city => {
 endCityAutoComplete.forEach(city => {
     city.addEventListener('click', () => {
         endCityInput.value = city.textContent.trim();
-        endCityOptionsDiv.classList.remove('active');
+        endCityOptionsDiv.classList.remove('activate-options');
 
 
     })

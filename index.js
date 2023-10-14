@@ -62,68 +62,71 @@ app.get("/", async(req, res) => {
 });
 
 // distance route
-function extractCityAndCountry(inputString) {
-    // Define a regular expression pattern to match city name and country code
-    let pattern = /(.+)\s*\(\s*([A-Z]+)\s*\)/;
-
-    // Use the regular expression to match and capture the city name and country code
-    let matches = inputString.match(pattern);
-
-    if (matches && matches.length === 3) {
-        let cityName = matches[1].trim();
-        let countryCode = matches[2];
-        return { cityName, countryCode };
-    } else {
-        return null; // Return null if no match is found
-    }
-}
+// Define a cache key for your data
 
 app.post('/distance', async(req, res) => {
 
     // Check if the data is in the cache
+
     const cachedData = cache.get(key);
     let distance;
     const startCity = req.body.start;
+    const startCitySPlit = startCity.split("-").map(part => part.trim());
+    const startCityName = startCitySPlit[0];
+    const startCityCode = startCitySPlit[1];
+
     const endCity = req.body.end;
+    const endCitySPlit = endCity.split("-").map(part => part.trim());
+    const endCityName = endCitySPlit[0];
+    const endCityCode = endCitySPlit[1];
 
-    const startCityInfo = extractCityAndCountry(startCity);
-    const endCityInfo = extractCityAndCountry(endCity);
 
-    if (cachedData) {
+    if (cachedData && cachedData.citySessionData && cachedData.countrySessionData) {
         const cityIdMap = {};
         const allCities = cachedData.citySessionData;
         allCities.forEach(element => { cityIdMap[element.city] = element.id; });
-        if (startCityInfo.cityName === endCityInfo.cityName) {
+
+
+        if (startCityName === endCityName) {
             distance = 0.00;
+
         } else {
             try {
-                const response = await axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/places/${cityIdMap[startCityInfo.cityName]}/distance?toPlaceId=${cityIdMap[endCityInfo.cityName]}`, {
+                const response = await axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/places/${cityIdMap[startCityName]}/distance?toPlaceId=${cityIdMap[endCityName]}`, {
                     headers: {
                         'X-RapidAPI-Key': process.env.API_KEY,
                         'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
                     }
                 });
                 distance = response.data.data;
+
+
+
             } catch (error) {
-                console.error('Error with API server, please go back to the home page and try again after few seconds:', error);
-                return res.status(500).json({ error: 'An error occurred on the server while calculating distances, please go back to the main page and try again after few seconds.' });
+                console.error('Error calculating distance:', error);
+                return res.status(500).json({ error: 'An error occurred on the server while calculating distance, please go back to the main page.' });
             }
+
         }
         res.render('country', { distance, countrySessionData: cachedData.countrySessionData, citySessionData: cachedData.citySessionData });
+
+
+
     } else {
-        // res.json({ message: 'Error with API server, please go back to the home page and try again after few seconds.' });
+        // Data is not in the cache, you can handle this case
+        // res.json({ message: ' any one data missing Error with API server, please go back to home page' });
         const headers = {
             'X-RapidAPI-Key': process.env.API_KEY,
             'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
         };
 
-        const requestOne = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${endCityInfo.countryCode}`, { headers });
+        const requestOne = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${endCityCode}`, { headers });
         const responseOne = await requestOne;
         const dataOne = responseOne.data.data;
 
         await new Promise(resolve => setTimeout(resolve, 1500));
 
-        const requestTwo = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?countryIds=${endCityInfo.countryCode}`, { headers });
+        const requestTwo = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?countryIds=${endCityCode}`, { headers });
         const responseTwo = await requestTwo;
         const dataTwo = responseTwo.data.data;
 
@@ -131,7 +134,7 @@ app.post('/distance', async(req, res) => {
         const cityIdMap = {};
         dataTwo.forEach(element => { cityIdMap[element.city] = element.id; });
         try {
-            const response = await axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/places/${cityIdMap[startCityInfo.cityName]}/distance?toPlaceId=${cityIdMap[endCityInfo.cityName]}`, {
+            const response = await axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/places/${cityIdMap[startCityName]}/distance?toPlaceId=${cityIdMap[endCityName]}`, {
                 headers: {
                     'X-RapidAPI-Key': process.env.API_KEY,
                     'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
@@ -145,9 +148,6 @@ app.post('/distance', async(req, res) => {
 
         res.render('country', { distance, dataOne, dataTwo });
     }
-
-
-
 
 
 });
@@ -180,7 +180,7 @@ app.get("/:country", async(req, res) => {
         const requestTwo = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?countryIds=${code}`, { headers });
         const responseTwo = await requestTwo;
         const dataTwo = responseTwo.data.data;
-        // cache.del(key);
+
         const dataToCache = {
             countrySessionData: dataOne,
             citySessionData: dataTwo
@@ -190,15 +190,8 @@ app.get("/:country", async(req, res) => {
 
         cache.set(key, dataToCache);
 
-        let cachedData = cache.get(key);
-
-        // cache.del(key);
-
+        cache.del(key);
         res.render('country', { dataOne, dataTwo });
-
-
-
-
     } catch (error) {
         res.send(error);
     }

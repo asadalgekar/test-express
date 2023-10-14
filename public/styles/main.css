@@ -2,6 +2,10 @@ html {
     font-size: 62.5%;
 }
 
+.bg {
+    background-color: crimson;
+}
+
 * {
     box-sizing: border-box;
     padding: 0;
@@ -440,8 +444,7 @@ button {
     display: none;
 }
 
-.start-options.active,
-.end-options.active {
+.activate-options {
     display: block;
     position: absolute;
     width: 100%;
@@ -476,6 +479,16 @@ button {
     font-size: 1.8rem;
     font-weight: 500;
     color: #6e6e6e;
+}
+
+.one-line-container {
+    white-space: nowrap;
+    /* Prevent line breaks */
+    overflow: hidden;
+    /* Hide overflow content */
+    text-overflow: ellipsis;
+    /* Display ellipsis (...) for overflow content */
+    /* You can adjust width or other styles as needed */
 }
 
 

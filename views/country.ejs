@@ -132,25 +132,22 @@
                                 </div>
                                 <div class="start-options">
                                     <ul class=" auto-complete auto-complete-start ">
-                                        <% if (locals.dataOne && locals.dataTwo) { %>
+                                        <% if (locals.dataTwo && locals.dataOne) { %>
                                             <ul>
                                                 <% dataTwo.forEach(element => { %>
                                                     <li data-option-element-city="<%=element.city %>">
-                                                        <%= element.city %> (
-                                                            <%= dataOne.code %> )
+                                                        <%= element.city %>-
+                                                            <%=dataOne.code  %>
                                                     </li>
                                                     <% }); %>
                                             </ul>
-                                            <% } else if (countrySessionData.locals && citySessionData.locals) { %>
+                                            <% } else if(locals.citySessionData && locals.countrySessionData) { %>
                                                 <ul>
                                                     <% citySessionData.forEach(element => { %>
-                                                        <li data-option-element-city="<%= element.city %>">
-                                                            <li data-option-element-city="<%=element.city %>">
-                                                                <%= element.city %> (
-                                                                    <%= dataOne.code %> )
-                                                            </li>
+                                                        <li data-option-element-city="<%=element.city %>">
+                                                            <%= element.city %>-
+                                                                <%= countrySessionData.code %>
                                                         </li>
-
                                                         <% }); %>
                                                 </ul>
                                                 <% } %>
@@ -165,21 +162,24 @@
                                 </div>
                                 <div class="end-options">
                                     <ul class="auto-complete  auto-complete-end">
-                                        <% if (locals.dataOne && locals.dataTwo) { %>
+                                        <% if (locals.dataTwo && locals.dataOne){ %>
                                             <ul>
                                                 <% dataTwo.forEach(element => { %>
                                                     <li data-option-element-city="<%= element.city %>">
-                                                        <%= element.city %> (
-                                                            <%= dataOne.code %> )
+                                                        <div class="one-line-container">
+                                                            <%= element.city %>-
+                                                                <%= dataOne.code %>
+                                                        </div>
+
                                                     </li>
                                                     <% }); %>
                                             </ul>
-                                            <% } else if (countrySessionData.locals && citySessionData.locals){ %>
+                                            <% } else if(locals.citySessionData && locals.countrySessionData) { %>
                                                 <ul>
                                                     <% citySessionData.forEach(element => { %>
                                                         <li data-option-element-city="<%=element.city %>">
-                                                            <%= element.city %>(
-                                                                <%= dataOne.code %>
+                                                            <%= element.city %>-
+                                                                <%= countrySessionData.code %>
                                                         </li>
                                                         <% }); %>
                                                 </ul>
