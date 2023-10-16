@@ -127,7 +127,7 @@
                             <div class="group1">
                                 <div class="select-city">
                                     <div class="select-text select-city-start">
-                                        <input type="text" name="start" id="startCity" placeholder="Start city" required>
+                                        <input readonly="readonly" type="text" name="start" id="startCity" placeholder="Start city" required>
                                     </div>
                                 </div>
                                 <div class="start-options">
@@ -136,7 +136,7 @@
                                             <ul>
                                                 <% dataTwo.forEach(element => { %>
                                                     <li data-option-element-city="<%=element.city %>">
-                                                        <%= element.city %>-
+                                                        <%= element.city %> -
                                                             <%=dataOne.code  %>
                                                     </li>
                                                     <% }); %>
@@ -145,7 +145,7 @@
                                                 <ul>
                                                     <% citySessionData.forEach(element => { %>
                                                         <li data-option-element-city="<%=element.city %>">
-                                                            <%= element.city %>-
+                                                            <%= element.city %> -
                                                                 <%= countrySessionData.code %>
                                                         </li>
                                                         <% }); %>
@@ -157,7 +157,7 @@
                             <div class="group2">
                                 <div class="select-city">
                                     <div class="select-text select-city-end">
-                                        <input type="text" name="end" id="endCity" placeholder="End city" required>
+                                        <input readonly="readonly" type="text" name="end" id="endCity" placeholder="End city" required>
                                     </div>
                                 </div>
                                 <div class="end-options">

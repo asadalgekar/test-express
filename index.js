@@ -6,6 +6,10 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { config } from 'dotenv';
 import NodeCache from "node-cache";
+
+import { parseCityNameAndCode } from './helpers/cityInfo-helper.js';
+
+
 const cache = new NodeCache();
 config();
 const app = express();
@@ -36,7 +40,11 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.set('public', __dirname + '/public');
 
-
+// API headers
+const headers = {
+    'X-RapidAPI-Key': process.env.API_KEY,
+    'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
+};
 // Home Route
 app.get("/", async(req, res) => {
     try {
@@ -47,10 +55,7 @@ app.get("/", async(req, res) => {
 
         });
         const response = await axios.get('https://wft-geo-db.p.rapidapi.com/v1/geo/countries?limit=10', {
-            headers: {
-                'X-RapidAPI-Key': process.env.API_KEY,
-                'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
-            }
+            headers
         })
         const countries = response.data.data;
         res.render("index", { data: countries });
@@ -62,24 +67,23 @@ app.get("/", async(req, res) => {
 });
 
 // distance route
-// Define a cache key for your data
 
 app.post('/distance', async(req, res) => {
 
-    // Check if the data is in the cache
-
     const cachedData = cache.get(key);
-    let distance;
+
     const startCity = req.body.start;
-    const startCitySPlit = startCity.split("-").map(part => part.trim());
-    const startCityName = startCitySPlit[0];
-    const startCityCode = startCitySPlit[1];
-
     const endCity = req.body.end;
-    const endCitySPlit = endCity.split("-").map(part => part.trim());
-    const endCityName = endCitySPlit[0];
-    const endCityCode = endCitySPlit[1];
+    const startCityInfo = parseCityNameAndCode(startCity);
+    const endCityInfo = parseCityNameAndCode(endCity);
 
+    const startCityName = startCityInfo.name;
+    const startCityCode = startCityInfo.code
+
+    const endCityName = endCityInfo.name;
+    const endCityCode = endCityInfo.code
+
+    let distance;
 
     if (cachedData && cachedData.citySessionData && cachedData.countrySessionData) {
         const cityIdMap = {};
@@ -93,14 +97,9 @@ app.post('/distance', async(req, res) => {
         } else {
             try {
                 const response = await axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/places/${cityIdMap[startCityName]}/distance?toPlaceId=${cityIdMap[endCityName]}`, {
-                    headers: {
-                        'X-RapidAPI-Key': process.env.API_KEY,
-                        'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
-                    }
+                    headers
                 });
                 distance = response.data.data;
-
-
 
             } catch (error) {
                 console.error('Error calculating distance:', error);
@@ -115,10 +114,6 @@ app.post('/distance', async(req, res) => {
     } else {
         // Data is not in the cache, you can handle this case
         // res.json({ message: ' any one data missing Error with API server, please go back to home page' });
-        const headers = {
-            'X-RapidAPI-Key': process.env.API_KEY,
-            'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
-        };
 
         const requestOne = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${endCityCode}`, { headers });
         const responseOne = await requestOne;
@@ -158,18 +153,8 @@ app.get("/:country", async(req, res) => {
 
     try {
         const countryName = req.params.country;
-        const splitCountryName = countryName.split("-");
-        const name = splitCountryName[0];
-        const code = splitCountryName[1];
-
-        if (!code) {
-            return res.status(400).json({ error: 'Invalid country code' });
-        }
-
-        const headers = {
-            'X-RapidAPI-Key': process.env.API_KEY,
-            'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
-        };
+        const countryNameInfo = parseCityNameAndCode(countryName);
+        const code = countryNameInfo.code;
 
         const requestOne = axios.get(`https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${code}`, { headers });
         const responseOne = await requestOne;
@@ -186,18 +171,14 @@ app.get("/:country", async(req, res) => {
             citySessionData: dataTwo
         };
 
-
-
         cache.set(key, dataToCache);
 
-        cache.del(key);
+        // cache.del(key);
         res.render('country', { dataOne, dataTwo });
     } catch (error) {
         res.send(error);
     }
 });
-
-
 
 app.listen(port, () => {
     console.log(`Server running on ${port}`);

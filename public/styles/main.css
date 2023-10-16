@@ -444,7 +444,8 @@ button {
     display: none;
 }
 
-.activate-options {
+.start-options.active,
+.end-options.active {
     display: block;
     position: absolute;
     width: 100%;
@@ -479,16 +480,6 @@ button {
     font-size: 1.8rem;
     font-weight: 500;
     color: #6e6e6e;
-}
-
-.one-line-container {
-    white-space: nowrap;
-    /* Prevent line breaks */
-    overflow: hidden;
-    /* Hide overflow content */
-    text-overflow: ellipsis;
-    /* Display ellipsis (...) for overflow content */
-    /* You can adjust width or other styles as needed */
 }
 
 
